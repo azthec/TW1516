@@ -1,0 +1,60 @@
+<!doctype html> <!-- html5 -->
+<html>
+    <head>
+        <title>Dots And Boxes</title>
+        <meta name="author" content="azthec" />
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/dnb.css" type="text/css" />
+        <link rel="icon" type="image/png" href="img/browser_icon.png" sizes="48x48">
+    </head>
+    <body>
+        <script src="js/divmain.js"></script>
+        <script src="js/divtabs.js"></script>
+
+        <!-- LANDING DIV -->
+        <div id="WelcomeDiv">
+            <h2>How To Play</h2>
+            <p>
+                This is a computerised version of the old classic which lets you play the game online. The aim is complete more boxes than your opponent.
+                You and your opponent take it in turns to join up two adjacent dots with a line.
+            </p>
+
+            <a href="javascript:void(0)" class="button" onclick="toggleDiv('WelcomeDiv');  toggleDiv('LoginDiv')">Login</a>
+        </div>
+
+
+        <!-- LOGIN DIV -->
+        <div id="LoginDiv" style="display: none;">
+            <h2>PLACEHOLDER FORM (w validation) HERE</h2>
+            <a href="javascript:void(0)" class="button" onclick="toggleDiv('LoginDiv');  toggleDiv('MainDiv')">Login</a>
+        </div>
+
+        <!-- GAME OPTIONS AND STATS DIV -->
+        <div id="MainDiv" style="display: none;">
+
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')">Options</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Progress')">Progress</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Leaderboards')">Leaderboards</a></li>
+            </ul>
+
+            <div id="Game" class="tabcontent">
+                <h3>Game</h3>
+                <p>Placeholder</p> 
+            </div>
+            <div id="Options" class="tabcontent">
+                <h3>Options</h3>
+                <p>Placeholder</p> 
+            </div>
+            <div id="Progress" class="tabcontent">
+                <h3>Progress</h3>
+                <p>Placeholder</p> 
+            </div>
+            <div id="Leaderboards" class="tabcontent">
+                <h3>Leaderboards</h3>
+                <p>Placeholder</p> 
+            </div>
+        </div>
+    </body>
+</html>
