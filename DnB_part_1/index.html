@@ -9,7 +9,8 @@
     </head>
     <body>
         <script src="js/divmain.js"></script>
-        <script src="js/divtabs.js"></script>
+        <script src="js/divtabs.js"></script>  
+        <script src="js/login.js"></script>
 
         <!-- LANDING DIV -->
         <div id="WelcomeDiv">
@@ -25,8 +26,16 @@
 
         <!-- LOGIN DIV -->
         <div id="LoginDiv" style="display: none;">
-            <h2>PLACEHOLDER FORM (w validation) HERE</h2>
-            <a href="javascript:void(0)" class="button" onclick="toggleDiv('LoginDiv');  toggleDiv('MainDiv')">Login</a>
+            <div class="container">
+                <label><b>Username</b></label>
+                <!-- Username 5-8 characters -->
+                <input type="text" placeholder="Enter Username" id="uname" name="uname" pattern="([A-Za-z]){5,8}" required>
+                <label><b>Password</b></label>
+                <!-- Password 8characters+ lowercase uppercase symbol -->
+                <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
+
+                <button id="submitButton" type="submit" onclick="check()">Login</button>
+            </div>
         </div>
 
         <!-- GAME OPTIONS AND STATS DIV -->
@@ -35,20 +44,23 @@
             <ul class="tab">
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')">Options</a></li>
-                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Progress')">Progress</a></li>
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Leaderboards')">Leaderboards</a></li>
             </ul>
 
             <div id="Game" class="tabcontent">
-                <h3>Game</h3>
-                <p>Placeholder</p> 
+                <div id="GameArea">
+                    <!-- GAME VISUALIZATION GOES HERE -->
+
+
+                </div>
+                <div id="GameProgress">
+                    <!-- GAME STATS GOES HERE -->
+
+
+                </div>
             </div>
             <div id="Options" class="tabcontent">
                 <h3>Options</h3>
-                <p>Placeholder</p> 
-            </div>
-            <div id="Progress" class="tabcontent">
-                <h3>Progress</h3>
                 <p>Placeholder</p> 
             </div>
             <div id="Leaderboards" class="tabcontent">
