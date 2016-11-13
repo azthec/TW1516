@@ -50,18 +50,17 @@
             </ul>
 
             <div id="Game" class="tabcontent">
+                
+     
                 <div id="GameArea">
+                    
+                    
                     <!-- GAME VISUALIZATION GOES HERE -->
-            
-                    
-                    
-                    
-                   
                     <a href="javascript:void(0)" class="button" onclick="setTableSize()">New Game</a>
+                  
                     
 	           </div>
-                    
-                
+                                 
                 
                 <div id="GameProgress">
                     <!-- GAME STATS GOES HERE -->
@@ -70,11 +69,13 @@
                     <div id="disTimerCPU">
                     </div>
 
-                    <div id="playerscore">
-                    </div>
-                    <div id="cpuscore">
-                    </div>
-                  
+                    <p>Player Score</p>
+                    <div id="playerscore"></div>
+                    <p>Cpu Score</p>
+                    <div id="cpuscore"></div>
+                    
+                    <div id="victorystatus"></div>
+                    
                     <a href="javascript:void(0)" class="button" onclick="removeTable(); toggleDiv('MainDiv');  toggleDiv('WelcomeDiv')">Quit</a>
                </div> 
             </div>
@@ -82,7 +83,7 @@
                 <h3>Options</h3>
                 <p>Placeholder</p> 
                 <form id="difficulty">
-                      Select Game Mode:<br>
+                      Game Mode:<br>
                       <input type="radio" name="mode" value="offline" checked> Offline<br>
                       <input type="radio" name="mode" value="online"> Online<br>
                       <br>
