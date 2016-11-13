@@ -11,7 +11,9 @@
         <script src="js/divmain.js"></script>
         <script src="js/divtabs.js"></script>  
         <script src="js/login.js"></script>
-
+        <script src="js/divgame.js"></script>
+        <script src="js/divtable.js"></script>
+        
         <!-- LANDING DIV -->
         <div id="WelcomeDiv">
             <h2>How To Play</h2>
@@ -39,7 +41,7 @@
         </div>
 
         <!-- GAME OPTIONS AND STATS DIV -->
-        <div id="MainDiv" style="display: none;">
+        <div id="MainDiv" style="display: none">
 
             <ul class="tab">
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
@@ -50,22 +52,57 @@
             <div id="Game" class="tabcontent">
                 <div id="GameArea">
                     <!-- GAME VISUALIZATION GOES HERE -->
-
-
-                </div>
+            
+                    
+                    
+                    
+                   
+                    <a href="javascript:void(0)" class="button" onclick="setTableSize()">New Game</a>
+                    
+	           </div>
+                    
+                
+                
                 <div id="GameProgress">
                     <!-- GAME STATS GOES HERE -->
+                    <div id="disTimerPlayer">
+                    </div>
+                    <div id="disTimerCPU">
+                    </div>
 
-
-                </div>
+                    <div id="playerscore">
+                    </div>
+                    <div id="cpuscore">
+                    </div>
+                  
+                    <a href="javascript:void(0)" class="button" onclick="removeTable(); toggleDiv('MainDiv');  toggleDiv('WelcomeDiv')">Quit</a>
+               </div> 
             </div>
             <div id="Options" class="tabcontent">
                 <h3>Options</h3>
                 <p>Placeholder</p> 
+                <form id="difficulty">
+                      Select Game Mode:<br>
+                      <input type="radio" name="mode" value="offline" checked> Offline<br>
+                      <input type="radio" name="mode" value="online"> Online<br>
+                      <br>
+                      Select difficulty:<br>
+                      <input type="radio" name="difficulty" value="beg" checked> Beginner [2x3]<br>
+                      <input type="radio" name="difficulty" value="inter"> Intermediate [4x5]<br>
+                      <input type="radio" name="difficulty" value="adv"> Advanced [6x8]<br>
+                      <input type="radio" name="difficulty" value="exp"> Expert [9x11]<br>
+                   
+                      
+                </form>
+                    
+                <a href="javascript:void(0)" class="button" onclick="setTableSize()">Save and New Game</a>
             </div>
+           
             <div id="Leaderboards" class="tabcontent">
                 <h3>Leaderboards</h3>
-                <p>Placeholder</p> 
+                <div id="leaderboard_table">
+                    <input type="button" id="tablebutton" value="Get Leaderboards" onclick="Javascript:addTable(); toggleButton('tablebutton')">
+                </div>
             </div>
         </div>
     </body>
