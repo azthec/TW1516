@@ -1,0 +1,103 @@
+<!doctype html> <!-- html5 -->
+<html>
+    <head>
+        <title>Dots And Boxes</title>
+        <meta name="author" content="azthec" />
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="DnB_part_2/css/dnb.css" type="text/css" />
+        <link rel="icon" type="image/png" href="DnB_part_2/img/browser_icon.png" sizes="48x48">
+    </head>
+    <body>
+        <script src="DnB_part_2/js/divmain.js"></script>
+        <script src="DnB_part_2/js/divtabs.js"></script>  
+        <script src="DnB_part_2/js/login.js"></script>
+        <script src="DnB_part_2/js/divgame.js"></script>
+        <script src="DnB_part_2/js/divtable.js"></script>
+        <script src="DnB_part_2/js/onlinegame.js"></script>
+        <script src="DnB_part_2/js/closures.js"></script>
+
+        <!-- GAME OPTIONS AND STATS DIV -->
+        <div id="MainDiv" style="display: block">
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')">Options</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Leaderboards')">Leaderboards</a></li>
+            </ul>
+
+            <div id="Game" class="tabcontent">
+                <a href="javascript:void(0)" id=startButton class="button" onclick="startGame(); toggleButton('startButton');">New Game</a>
+
+                <div id="login" class="container" style="display:none;">
+                    <label><b>Username</b></label>
+                    <!-- Username 5-8 characters -->
+                    <input type="text" placeholder="Enter Username" id="uname" name="uname" pattern="([A-Za-z]){5,8}" required>
+                    <label><b>Password</b></label>
+                    <!-- Password 8characters+ lowercase uppercase symbol -->
+                    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
+
+                    <button id="submitButton" type="submit" onclick="check()">Login</button>
+                </div>
+
+                <div id="GameArea" style="display:none;">
+
+                </div>
+
+                <div id="GameProgress" style="display:none;">
+
+                    <!-- GAME STATS GOES HERE -->
+                    <div id="disTimerPlayer">
+                    </div>
+                    <div id="disTimerCPU">
+                    </div>
+
+                    <p>Player Score</p>
+                    <div id="playerscore"></div>
+                    <p>Cpu Score</p>
+                    <div id="cpuscore"></div>
+
+                    <div id="victorystatus"></div>
+
+                    <a href="javascript:void(0)" class="button" onclick="removeTable(); toggleDiv('MainDiv');  toggleDiv('WelcomeDiv')">Quit</a>
+                </div> 
+            </div>
+
+            <div id="Options" class="tabcontent">
+                <h1>Options</h1>
+                <form id="difficulty">
+                    <input type="checkbox" id="onlineCheckbox" name="mode" value="online" checked>Online<br>
+                    <br>
+                    <div id="radioDiv">
+                        Select difficulty:<br>
+                        <input type="radio" name="difficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
+                        <input type="radio" name="difficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
+                        <input type="radio" name="difficulty" class="radio" value="adv"> Advanced (6 by 8)<br>
+                        <input type="radio" name="difficulty" class="radio" value="exp"> Expert (9 by 11)<br>
+                    </div> 
+                </form>
+            </div>
+
+            <div id="Leaderboards" class="tabcontent">
+                <h1>Leaderboards</h1>
+                <form id="rankingDifficulty">
+                    <input type="checkbox" id="rankingOnlineCheckbox" name="mode" value="online" checked>Online<br>
+                    <br>
+                    <div id="radioDiv">
+                        Select difficulty:<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="adv"> Advanced (6 by 8)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="exp"> Expert (9 by 11)<br>
+                    </div> 
+                </form>
+                <br>
+                <input type="button" class="button" id="tablebutton" value="Get Leaderboards" onclick="rankingTable();">
+                <br>
+                <div id="leaderboard_table">
+                    
+                </div>
+            </div>
+
+
+        </div>
+    </body>
+</html>
