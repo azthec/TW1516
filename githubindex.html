@@ -4,20 +4,28 @@
         <title>Dots And Boxes</title>
         <meta name="author" content="azthec" />
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="DnB_part_2/css/dnb.css" type="text/css" />
-        <link rel="icon" type="image/png" href="DnB_part_2/img/browser_icon.png" sizes="48x48">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/dnb.css" type="text/css" />
+        <link rel="icon" type="image/png" href="img/browser_icon.png" sizes="48x48">
     </head>
     <body>
-        <script src="DnB_part_2/js/divmain.js"></script>
-        <script src="DnB_part_2/js/divtabs.js"></script>  
-        <script src="DnB_part_2/js/login.js"></script>
-        <script src="DnB_part_2/js/divgame.js"></script>
-        <script src="DnB_part_2/js/divtable.js"></script>
-        <script src="DnB_part_2/js/onlinegame.js"></script>
-        <script src="DnB_part_2/js/closures.js"></script>
+        <script src="js/divmain.js"></script>
+        <script src="js/divtabs.js"></script>  
+        <script src="js/login.js"></script>
+        <script src="js/divgame.js"></script>
+        <script src="js/divtable.js"></script>
+        <script src="js/onlinegame.js"></script>
+        <script src="js/closures.js"></script>
+        <script src="js/stopwatch.js"></script>
+        <script src="js/localScores.js"></script>
+        <script src="js/canvas.js"></script>
 
         <!-- GAME OPTIONS AND STATS DIV -->
-        <div id="MainDiv" style="display: block">
+        <div id="EnemyCanvas" class="enemycanvasdiv" style="display: none;"><canvas id="enemycanvas" width=600></canvas></div>
+        <div id="PlayerCanvas" class="playercanvasdiv" style="display: none;"><canvas id="playercanvas" width=600></canvas></div>
+        <div id="WinCanvas" class="winnercanvasdiv" style="display: none;"><canvas id="wincanvas" width=600></canvas></div>
+        
+        <div id="MainDiv" style="display: block;">
             <ul class="tab">
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
                 <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')">Options</a></li>
@@ -25,40 +33,59 @@
             </ul>
 
             <div id="Game" class="tabcontent">
-                <a href="javascript:void(0)" id=startButton class="button" onclick="startGame(); toggleButton('startButton');">New Game</a>
+                
+                <div id="GameProgress" style="display:block;">
+
+                    <!-- GAME STATS GOES HERE ATTEMPTED STATS TABLE -->
+                    <table id="GameStats" class="score">
+                        <tr>
+                            <td>Player Score</td>
+                            <td>Player Time</td> 
+                            <td>Enemy Name</td>
+                            <td>Enemy Score</td>
+                            <td>Enemy Time</td> 
+                        </tr>
+                        <tr>
+                            <td id="playerscore"></td>
+                            <td id="disTimerPlayer"></td>
+                            <td id="enemy"></td>
+                            <td id="cpuscore"></td>
+                            <td id="disTimerCPU"></td> 
+                        </tr>
+                    </table>
+                    <div id="turn">
+                        <img src="img/enemy.jpg" class="topcorner" style="display:none;" alt="enemyimage"/>
+                        <img src="img/player.jpg" class="topcorner" style="display:none;" alt="playerimage"/>
+                    </div>
+                    
+                    <div id="victorystatus"></div>
+
+                    <br>
+                    
+                    <a href="javascript:void(0)" id="quitQueue" class="button" onclick="quitQueue();" style="display:none;" >Leave  Waiting Queue</a>
+                    <a href="javascript:void(0)" id="quitGame" class="button" onclick="quitGame();" style="display:none;" >Quit to Main Menu</a>
+                </div> 
+                
+                <a href="javascript:void(0)" id="startButton" class="button" onclick="startGame(); toggleButton('startButton');">New Game</a>
 
                 <div id="login" class="container" style="display:none;">
                     <label><b>Username</b></label>
                     <!-- Username 5-8 characters -->
-                    <input type="text" placeholder="Enter Username" id="uname" name="uname" pattern="([A-Za-z]){5,8}" required>
+                    <input type="text" placeholder="Enter Username" id="uname" name="uname" title="Username should only contain lowercase letters, 5-8 characters." pattern="([A-Za-z]){5,8}" required>
                     <label><b>Password</b></label>
                     <!-- Password 8characters+ lowercase uppercase symbol -->
-                    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
+                    <input type="password" title="Password should contain lowercase letters, uppercase letters, numbers and be longer than 12 characters." placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
 
                     <button id="submitButton" type="submit" onclick="check()">Login</button>
                 </div>
+                
+                <br>
 
                 <div id="GameArea" style="display:none;">
 
                 </div>
 
-                <div id="GameProgress" style="display:none;">
-
-                    <!-- GAME STATS GOES HERE -->
-                    <div id="disTimerPlayer">
-                    </div>
-                    <div id="disTimerCPU">
-                    </div>
-
-                    <p>Player Score</p>
-                    <div id="playerscore"></div>
-                    <p>Cpu Score</p>
-                    <div id="cpuscore"></div>
-
-                    <div id="victorystatus"></div>
-
-                    <a href="javascript:void(0)" class="button" onclick="removeTable(); toggleDiv('MainDiv');  toggleDiv('WelcomeDiv')">Quit</a>
-                </div> 
+                
             </div>
 
             <div id="Options" class="tabcontent">
@@ -66,7 +93,7 @@
                 <form id="difficulty">
                     <input type="checkbox" id="onlineCheckbox" name="mode" value="online" checked>Online<br>
                     <br>
-                    <div id="radioDiv">
+                    <div id="difficultyRadioDiv">
                         Select difficulty:<br>
                         <input type="radio" name="difficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
                         <input type="radio" name="difficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
@@ -81,7 +108,7 @@
                 <form id="rankingDifficulty">
                     <input type="checkbox" id="rankingOnlineCheckbox" name="mode" value="online" checked>Online<br>
                     <br>
-                    <div id="radioDiv">
+                    <div id="rankingRadioDiv">
                         Select difficulty:<br>
                         <input type="radio" name="rankingDifficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
                         <input type="radio" name="rankingDifficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
@@ -93,7 +120,7 @@
                 <input type="button" class="button" id="tablebutton" value="Get Leaderboards" onclick="rankingTable();">
                 <br>
                 <div id="leaderboard_table">
-                    
+
                 </div>
             </div>
 
