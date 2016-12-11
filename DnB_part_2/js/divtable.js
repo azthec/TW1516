@@ -24,7 +24,9 @@ function rankingTable() {
         }	
     }
     document.getElementById("leaderboard_table").innerHTML = "";
-    showRanking(level); 
+    var mode = document.getElementById("rankingOnlineCheckbox").checked;
+    mode ? showRanking(level) : HighScores(level);
+     
     
 }
 

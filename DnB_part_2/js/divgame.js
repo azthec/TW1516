@@ -1,8 +1,8 @@
 /*Function that generates the table*/
-
+difficulty = "";
+ran = 0;
 function buildTable (rows, cols) {	
     toggleDiv("GameArea");
-    toggleDiv("GameProgress");
     //If a table already exists, delete it otherwise it will keep generating tables.
     removeTable(), 
 
@@ -87,21 +87,25 @@ function setTableSize() {
     switch (diff.elements["difficulty"].value) {
             //Beginner
         case "beg": {
+            difficulty = "beginner";
             buildTable(2,3);
             break;
         }
             //Intermediate
         case "inter": {
+            difficulty = "intermediate";
             buildTable(4,5);
             break;
         }
             //Advanced
         case "adv": {
+            difficulty = "advanced";
             buildTable(6,8);
             break;
         }
             //Expert
         case "exp": {
+            difficulty = "expert";
             buildTable(9,11);
             break;		
         }	
@@ -180,11 +184,13 @@ function removeTable() {
     var elem = document.getElementById("tableid");
     if (elem)
         elem.parentNode.removeChild(elem);
-    
+    ran=0;
 	var displayEl = document.getElementById("playerscore");
-    displayEl.innerHTML = 0;
+    displayEl.innerHTML = "";
     displayEl = document.getElementById("cpuscore");
-    displayEl.innerHTML = 0;
+    displayEl.innerHTML = "";
+    displayEl = document.getElementById("victorystatus");
+    displayEl.innerHTML = "";
     
 }
 
@@ -362,19 +368,24 @@ function checkGameFinished() {
 
     if (v.length == (temp1)*(temp2)) {
         //Alerts are created when game is finished
+        var button = document.getElementById("quitGame");
+		button.style.display = "block";
         var displayEl = document.getElementById("victorystatus");
+        if(ran==0) { //for whatever reason this block is executed twice...
+            UpdateScore(difficulty);
+            ran=1;
+        }
         if (player_score > cpu_score) {
             displayEl.innerHTML = "WINNER WINNER CHICKEN DINNER!";
             return;
         }
         else if (player_score < cpu_score) {
             displayEl.innerHTML = "BETTER LUCK NEXT TIME!";
-            return;
         }	
         else {
             displayEl.innerHTML = "DRAWDRAWDRAW!";
             return;
-        }
+        } 
 	}
     return false;	
 }

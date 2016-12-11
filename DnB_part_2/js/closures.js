@@ -1,5 +1,8 @@
 
-
+/**
+ * Create online  game visualization table
+ * @param table name, size rows, size columns
+ */
 function create(name,rows,columns) {
     
     //because dots still count as part of the table
@@ -55,19 +58,30 @@ function create(name,rows,columns) {
 
 	}
     }
-    
 }
 
+/**
+ * Converts table matrix position into html id
+ * @param table ri ci
+ */
 function getId(row,column) {
     return "cell-"+row+"-"+column
 }
 
+/**
+ * Paints edge red (used after server notification)
+ * @param edge ri ci
+ */
 function clicked(row,column) {
     console.log("["+row+","+column+"]");
     var cell = document.getElementById(getId(row,column));
     cell.style.background = "red";
 }
 
+/**
+ * Paints box red (used after server notification)
+ * @param player ri ci
+ */
 function boxed(player,row,column) {
     console.log("["+row+","+column+"]");
     var cell = document.getElementById(getId(row,column));
@@ -76,11 +90,3 @@ function boxed(player,row,column) {
     else 
         cell.style.background = "blue"; //opponent is blue
 }
-
-/*
-window.onload = function() {
-    console.log("Starting");
-    create("grid",5,5);
-
-}      
-*/

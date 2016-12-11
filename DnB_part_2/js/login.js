@@ -25,13 +25,6 @@ function check()
 
 
 
-
-
-
-
-
-
-
 /*
 
 js

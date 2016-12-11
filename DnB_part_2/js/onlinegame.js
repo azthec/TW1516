@@ -1,13 +1,24 @@
 ////////////////////////////////////////////////Multiplayer///////////////////////////////////////////////////////////////////
 
-
+/**
+ * Global variables and respective functions
+ *
+ */
 
 key = "";
-level = "intermediate";
+level = "";
 gameID="";
 user="";
 pass="";
 activeLogin=0;
+var source;
+enemy = "";
+playerBoxes = 0;
+enemyBoxes = 0;
+var enemyTurnInterval;
+var playerTurnInterval;
+var winInterval;
+
 
 function getKey() {
     return key;
@@ -49,6 +60,14 @@ function setUser(value) {
     user = value;
 }
 
+function getEnemy() {
+    return enemy;
+}
+
+function setEnemy(value) {
+    enemy = value;
+}
+
 function getPass() {
     return pass;
 }
@@ -57,6 +76,64 @@ function setPass(value) {
     pass = value;
 }
 
+function getPlayerBoxes() {
+    return playerBoxes;
+}
+
+function incrementPlayerBoxes() {
+    return playerBoxes++;
+}
+
+function resetPlayerBoxes() {
+    playerBoxes=0;
+}
+
+function incrementEnemyBoxes() {
+    return enemyBoxes++;
+}
+
+function resetEnemyBoxes() {
+    enemyBoxes=0;
+}
+
+
+/**
+ * Shows player turn animations
+ *
+ */
+function showPlayerTurn() {
+    toggleDiv('PlayerCanvas');
+    setTimeout(function() { 
+       toggleDiv('PlayerCanvas');
+   }, 1000);
+}
+
+/**
+ * Shows enemy turn animations
+ *
+ */
+function showEnemyTurn() {
+    toggleDiv('EnemyCanvas');
+    setTimeout(function() { 
+       toggleDiv('EnemyCanvas');
+   }, 1000);
+}
+/**
+
+ * Shows win animation
+ *
+ */
+function showWin() {
+    toggleDiv('WinCanvas');
+    setTimeout(function() { 
+       toggleDiv('WinCanvas');
+   }, 1000);
+}
+
+/**
+ * Parses html radio buttons and checkbox into variables
+ *
+ */
 function setLevel() {
     var diff = document.getElementById("difficulty");
     switch (diff.elements["difficulty"].value) {
@@ -84,7 +161,6 @@ function setLevel() {
     return getLevel();
 }
 
-/*Defines the size of the table according to the difficulty chosen by user*/
 function setAndCreateOnlineTable() {
     var diff = getLevel();
     switch (diff) {
@@ -113,9 +189,10 @@ function setAndCreateOnlineTable() {
 
 
 /**
- * starts multiplayer game.<br>
- * If the connection with the server is on, it will register and/or login the player and alert him if there's a problem with his registration<br>
- * if succeded, it will look for a player to join in and will alert the user.
+ * Begins the multiplayer game
+ * Registers / Logins the player, if any error occurs the player is warned via popup with the server error
+ * if it succeedes the player is placed into a queue with the option to leave
+ * @param user and password
  */
 function beginMultiplayer(username, password){
     setUser(username);
@@ -149,7 +226,7 @@ function beginMultiplayer(username, password){
 }
 
 /**
- * Method to get a gameId given by the server
+ * Gets game id and game authorization key, begins main game-server loop
  */
 function joinGame(){
     var url = "http://twserver.alunos.dcc.fc.up.pt:8000/join";
@@ -157,8 +234,6 @@ function joinGame(){
     req.open("POST", url, true);
     req.setRequestHeader("Content-type", "application/json");
     req.send(JSON.stringify({name:getUser(), pass:getPass(), level:getLevel(), group:'16'}));
-
-    //
     req.responseType='text';
     req.onreadystatechange = function() {
         if (req.readyState == 4 && req.status == 200) {
@@ -171,49 +246,22 @@ function joinGame(){
                 setGameID(response.game);
                 setKey(response.key);
                 console.log(response);
+                toggleButton("quitQueue");
                 update();
             }
         }
     }
-    //
-
-    /*
-    req.onload = function() {
-        respServer = req.responseText;
-        response=JSON.parse(respServer);
-        if(response.hasOwnProperty("error")) {
-            alert(response.error);
-            console.log(response);
-        } else {
-            setGameID(response.game);
-            setKey(response.key);
-            console.log(response);
-            update();
-        }
-    };
-    */
 }
 
 /**
- * Method to connect two players and to start a new game.<br>
- * After the the game is launched, it will update the enemy points and check if there's a winner, either by goal or forfeit.
- * @param id of the game set
+ * main Method to receive game data from the server
+ * after the game connection is launched it updates the visualization with the server notifications
+ * 
  */
 function update() {
-    //TODO add check for key and game validity, otherwise url returns json and not event stream which leads to EventSource causing an unrecoverable state
-
-    /*
-    url='http://twserver.alunos.dcc.fc.up.pt:8000/update?name='+getUser()+'&game='+getGameID+'&key='+getKey();
-
-	var req = new XMLHttpRequest();
-
-	req.open("GET",url , true);
-	req.responseType='text';
-	req.onload = function() {
-        console.log(req.responseText);
-	};
-    */
-
+    playerTurnInterval = drawYourTurn();
+    enemyTurnInterval = drawEnemyTurn();
+    winInterval = drawWin();
     url='http://twserver.alunos.dcc.fc.up.pt:8000/update?name='+getUser()+'&game='+getGameID()+'&key='+getKey();
     console.log(url);
     source = new EventSource(url); // URL do script
@@ -221,41 +269,88 @@ function update() {
         var response = JSON.parse(event.data);
         console.log(response);
         if (response.hasOwnProperty("opponent")) {
-            //TODO show opponent on web page
-            //TODO set starting player turn and begin game
+            setEnemy(response.opponent);
+            document.getElementById("enemy").innerHTML=getEnemy();
+            toggleButton("quitQueue");
+            if(response.turn==getUser()) {
+                showPlayerTurn();
+                starth1();
+            } else {
+                showEnemyTurn();
+                starth2();
+            }
             setAndCreateOnlineTable();
         } else {
             //registers confirmed server move from screen
             var move = edgeToIndex(response.move.orient, response.move.row, response.move.col);
             clicked(move[0], move[1]);
-
-
-            //TODO handle boxes
+            
+            if(response.hasOwnProperty("turn")) {
+                if(!response.move.hasOwnProperty("boxes")) { //caso sejam dois moves seguidos
+                    if(response.turn==getUser()) {
+                        pauseh2();
+                        /*
+                        time=response.move.time;
+                        time=time-(Math.floor(time/60)*60);
+                        updateh1(Math.round(time * 100) / 100);
+                        */
+                        starth1();
+                    } else {
+                        pauseh1();
+                        /*
+                        time=response.move.time;
+                        time=time-(Math.floor(time/60)*60);
+                        updateh2(Math.round(time * 100) / 100);
+                        */
+                        starth2();
+                    }
+                }
+                if(response.turn==getUser()) {
+                    showPlayerTurn();
+                } else {
+                    showEnemyTurn();
+                }
+            }
             if(response.move.hasOwnProperty("boxes")) {
                 if(response.move.name==getUser())
                     colourBoxes('1',response.move.boxes);
                 else
                     colourBoxes('0',response.move.boxes);
             }
-
-
-
-
-
             if(response.hasOwnProperty("winner")) {
-                //TODO handle if game has ended
-
-
+                if(lastPlayer==getUser())pauseh1();
+                else pauseh2();
+                source.close();
+                if(response.winner==getUser())showWin();
+                clearInterval(playerTurnInterval);
+                clearInterval(enemyTurnInterval);
+                toggleButton("quitGame");
             }
+            lastPlayer=response.turn;
+            
         }
+        updateGameProgress();
     }
 }
 
+function updateGameProgress() {
+    document.getElementById("playerscore").innerHTML=playerBoxes;
+    document.getElementById("cpuscore").innerHTML=enemyBoxes;
+}
+
+/**
+ * returns if number is even or not
+ *
+ */
 function isEven(n) {
     n = Number(n);
     return n === 0 || !!(n && !(n%2));
 }
 
+/**
+ * Converts local table format into edge server format for played lines
+ *
+ */
 function indexToEdge(ri, ci) {
     if(isEven(ri)) {
         var orient = 'h';
@@ -270,6 +365,10 @@ function indexToEdge(ri, ci) {
     }
 }
 
+/**
+ * Converts server format into local table format for played lines
+ *
+ */
 function edgeToIndex(orient, row, col) {
     if(orient=='h') {
         var ri = 2*(row-1);
@@ -282,14 +381,24 @@ function edgeToIndex(orient, row, col) {
     }
 }
 
+/**
+ * Converts server format into local table format for conquered boxes
+ *
+ */
 function boxesToIndex(row, col) {
     var ri = 2*row-1;
     var ci = 2*col-1;
     return [ri, ci];
 }
 
+/**
+ * Colours conquered boxes with respect to conqueror
+ *
+ */
 function colourBoxes(player,boxes) {
     for(i=0; i<boxes.length;i++) {
+        if(player==1)incrementPlayerBoxes();
+        else incrementEnemyBoxes();
         indexBox = boxesToIndex(boxes[i][0],boxes[i][1]);
         boxed(player,indexBox[0],indexBox[1]);
     }
@@ -297,7 +406,8 @@ function colourBoxes(player,boxes) {
 
 
 /**
- * Notifies the server of player events.
+ * Notifies the server of player actions
+ * @param local table row index column index
  */
 function notify(ri, ci){
     var url = "http://twserver.alunos.dcc.fc.up.pt:8000/notify";
@@ -319,17 +429,14 @@ function notify(ri, ci){
 }
 
 /**
- * Closes connection with the server.
+ * Leaves game queue, not usable while in a game.
  */
 function leave(){
-    //TODO block execution while game is running
     var url = "http://twserver.alunos.dcc.fc.up.pt:8000/leave";
     var req = new XMLHttpRequest();
     req.open("POST", url, true);
     req.setRequestHeader("Content-type", "application/json");
-    //TODO reset html drawn table
     req.send(JSON.stringify({name:getUser(), game:getGameID(), key:getKey()}));
-
     req.responseType='text';
     req.onload = function() {
         respServer = req.responseText;
@@ -337,12 +444,20 @@ function leave(){
         if(response.hasOwnProperty("error")) {
             console.log(response);
             alert(response.error);
+        } else {
+            source.close();
+            document.getElementById("GameArea").innerHTML = "";
+            toggleButton("quitQueue");
+            toggleButton("startButton");
         }
     };
 }
 
+/**
+ * Get leaderboards from server and populate table
+ * @param leaderboard difficulty
+ */
 function showRanking(rankingLevel){
-    //TODO add radio buttons to select rankingLevel to show @ html page
     var url = "http://twserver.alunos.dcc.fc.up.pt:8000/ranking";
     var req = new XMLHttpRequest();
     req.open("POST", url, true);
