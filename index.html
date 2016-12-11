@@ -1,165 +1,130 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Tw1516 by azthec</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Tw1516</h1>
-      <h2 class="project-tagline"></h2>
-      <a href="https://github.com/azthec/TW1516" class="btn">View on GitHub</a>
-      <a href="https://github.com/azthec/TW1516/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/azthec/TW1516/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<!doctype html> <!-- html5 -->
+<html>
+    <head>
+        <title>Dots And Boxes</title>
+        <meta name="author" content="azthec" />
+        <meta name="viewport" content="width=device-width">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/dnb.css" type="text/css" />
+        <link rel="icon" type="image/png" href="img/browser_icon.png" sizes="48x48">
+    </head>
+    <body>
+        <script src="js/divmain.js"></script>
+        <script src="js/divtabs.js"></script>  
+        <script src="js/login.js"></script>
+        <script src="js/divgame.js"></script>
+        <script src="js/divtable.js"></script>
+        <script src="js/onlinegame.js"></script>
+        <script src="js/closures.js"></script>
+        <script src="js/stopwatch.js"></script>
+        <script src="js/localScores.js"></script>
+        <script src="js/canvas.js"></script>
 
-    <section class="main-content">
-      <p>&lt;!doctype html&gt; 
-
-    </p>
-        Dots And Boxes
+        <!-- GAME OPTIONS AND STATS DIV -->
+        <div id="EnemyCanvas" class="enemycanvasdiv" style="display: none;"><canvas id="enemycanvas" width=600></canvas></div>
+        <div id="PlayerCanvas" class="playercanvasdiv" style="display: none;"><canvas id="playercanvas" width=600></canvas></div>
+        <div id="WinCanvas" class="winnercanvasdiv" style="display: none;"><canvas id="wincanvas" width=600></canvas></div>
         
-        
-        
-        
-        
-    
-    
-        
-        <br>
-        
-        
-        
-        
-        
-        
-        
-        
+        <div id="MainDiv" style="display: block;">
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')">Game</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')">Options</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Leaderboards')">Leaderboards</a></li>
+            </ul>
 
-<pre><code>    &lt;!-- GAME OPTIONS AND STATS DIV --&gt;
-    &lt;div id="EnemyCanvas" class="enemycanvasdiv" style="display: none;"&gt;&lt;canvas id="enemycanvas" width=600&gt;&lt;/canvas&gt;&lt;/div&gt;
-    &lt;div id="PlayerCanvas" class="playercanvasdiv" style="display: none;"&gt;&lt;canvas id="playercanvas" width=600&gt;&lt;/canvas&gt;&lt;/div&gt;
-    &lt;div id="WinCanvas" class="winnercanvasdiv" style="display: none;"&gt;&lt;canvas id="wincanvas" width=600&gt;&lt;/canvas&gt;&lt;/div&gt;
+            <div id="Game" class="tabcontent">
+                
+                <div id="GameProgress" style="display:block;">
 
-    &lt;div id="MainDiv" style="display: block;"&gt;
-        &lt;ul class="tab"&gt;
-            &lt;li&gt;&lt;a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Game')"&gt;Game&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Options')"&gt;Options&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Leaderboards')"&gt;Leaderboards&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
+                    <!-- GAME STATS GOES HERE ATTEMPTED STATS TABLE -->
+                    <table id="GameStats" class="score">
+                        <tr>
+                            <td>Player Score</td>
+                            <td>Player Time</td> 
+                            <td>Enemy Name</td>
+                            <td>Enemy Score</td>
+                            <td>Enemy Time</td> 
+                        </tr>
+                        <tr>
+                            <td id="playerscore"></td>
+                            <td id="disTimerPlayer"></td>
+                            <td id="enemy"></td>
+                            <td id="cpuscore"></td>
+                            <td id="disTimerCPU"></td> 
+                        </tr>
+                    </table>
+                    <div id="turn">
+                        <img src="img/enemy.jpg" class="topcorner" style="display:none;" alt="enemyimage"/>
+                        <img src="img/player.jpg" class="topcorner" style="display:none;" alt="playerimage"/>
+                    </div>
+                    
+                    <div id="victorystatus"></div>
 
-        &lt;div id="Game" class="tabcontent"&gt;
+                    <br>
+                    
+                    <a href="javascript:void(0)" id="quitQueue" class="button" onclick="quitQueue();" style="display:none;" >Leave  Waiting Queue</a>
+                    <a href="javascript:void(0)" id="quitGame" class="button" onclick="quitGame();" style="display:none;" >Quit to Main Menu</a>
+                </div> 
+                
+                <a href="javascript:void(0)" id="startButton" class="button" onclick="startGame(); toggleButton('startButton');">New Game</a>
 
-            &lt;div id="GameProgress" style="display:block;"&gt;
+                <div id="login" class="container" style="display:none;">
+                    <label><b>Username</b></label>
+                    <!-- Username 5-8 characters -->
+                    <input type="text" placeholder="Enter Username" id="uname" name="uname" title="Username should only contain lowercase letters, 5-8 characters." pattern="([A-Za-z]){5,8}" required>
+                    <label><b>Password</b></label>
+                    <!-- Password 8characters+ lowercase uppercase symbol -->
+                    <input type="password" title="Password should contain lowercase letters, uppercase letters, numbers and be longer than 12 characters." placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
 
-                &lt;!-- GAME STATS GOES HERE ATTEMPTED STATS TABLE --&gt;
-                &lt;table id="GameStats" class="score"&gt;
-                    &lt;tr&gt;
-                        &lt;td&gt;Player Score&lt;/td&gt;
-                        &lt;td&gt;Player Time&lt;/td&gt; 
-                        &lt;td&gt;Enemy Name&lt;/td&gt;
-                        &lt;td&gt;Enemy Score&lt;/td&gt;
-                        &lt;td&gt;Enemy Time&lt;/td&gt; 
-                    &lt;/tr&gt;
-                    &lt;tr&gt;
-                        &lt;td id="playerscore"&gt;&lt;/td&gt;
-                        &lt;td id="disTimerPlayer"&gt;&lt;/td&gt;
-                        &lt;td id="enemy"&gt;&lt;/td&gt;
-                        &lt;td id="cpuscore"&gt;&lt;/td&gt;
-                        &lt;td id="disTimerCPU"&gt;&lt;/td&gt; 
-                    &lt;/tr&gt;
-                &lt;/table&gt;
-                &lt;div id="turn"&gt;
-                    &lt;img src="DnB_part_2/img/enemy.jpg" class="topcorner" style="display:none;" alt="enemyimage"/&gt;
-                    &lt;img src="DnB_part_2/img/player.jpg" class="topcorner" style="display:none;" alt="playerimage"/&gt;
-                &lt;/div&gt;
+                    <button id="submitButton" type="submit" onclick="check()">Login</button>
+                </div>
+                
+                <br>
 
-                &lt;div id="victorystatus"&gt;&lt;/div&gt;
+                <div id="GameArea" style="display:none;">
 
-                &lt;br&gt;
+                </div>
 
-                &lt;a href="javascript:void(0)" id="quitQueue" class="button" onclick="quitQueue();" style="display:none;" &gt;Leave  Waiting Queue&lt;/a&gt;
-                &lt;a href="javascript:void(0)" id="quitGame" class="button" onclick="quitGame();" style="display:none;" &gt;Quit to Main Menu&lt;/a&gt;
-            &lt;/div&gt; 
+                
+            </div>
 
-            &lt;a href="javascript:void(0)" id="startButton" class="button" onclick="startGame(); toggleButton('startButton');"&gt;New Game&lt;/a&gt;
+            <div id="Options" class="tabcontent">
+                <h1>Options</h1>
+                <form id="difficulty">
+                    <input type="checkbox" id="onlineCheckbox" name="mode" value="online" checked>Online<br>
+                    <br>
+                    <div id="difficultyRadioDiv">
+                        Select difficulty:<br>
+                        <input type="radio" name="difficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
+                        <input type="radio" name="difficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
+                        <input type="radio" name="difficulty" class="radio" value="adv"> Advanced (6 by 8)<br>
+                        <input type="radio" name="difficulty" class="radio" value="exp"> Expert (9 by 11)<br>
+                    </div> 
+                </form>
+            </div>
 
-            &lt;div id="login" class="container" style="display:none;"&gt;
-                &lt;label&gt;&lt;b&gt;Username&lt;/b&gt;&lt;/label&gt;
-                &lt;!-- Username 5-8 characters --&gt;
-                &lt;input type="text" placeholder="Enter Username" id="uname" name="uname" title="Username should only contain lowercase letters, 5-8 characters." pattern="([A-Za-z]){5,8}" required&gt;
-                &lt;label&gt;&lt;b&gt;Password&lt;/b&gt;&lt;/label&gt;
-                &lt;!-- Password 8characters+ lowercase uppercase symbol --&gt;
-                &lt;input type="password" title="Password should contain lowercase letters, uppercase letters, numbers and be longer than 12 characters." placeholder="Enter Password" id="psw" name="psw" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required&gt;
+            <div id="Leaderboards" class="tabcontent">
+                <h1>Leaderboards</h1>
+                <form id="rankingDifficulty">
+                    <input type="checkbox" id="rankingOnlineCheckbox" name="mode" value="online" checked>Online<br>
+                    <br>
+                    <div id="rankingRadioDiv">
+                        Select difficulty:<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="beg" checked> Beginner (2 by 3)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="inter"> Intermediate (4 by 5)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="adv"> Advanced (6 by 8)<br>
+                        <input type="radio" name="rankingDifficulty" class="radio" value="exp"> Expert (9 by 11)<br>
+                    </div> 
+                </form>
+                <br>
+                <input type="button" class="button" id="tablebutton" value="Get Leaderboards" onclick="rankingTable();">
+                <br>
+                <div id="leaderboard_table">
 
-                &lt;button id="submitButton" type="submit" onclick="check()"&gt;Login&lt;/button&gt;
-            &lt;/div&gt;
-
-            &lt;br&gt;
-
-            &lt;div id="GameArea" style="display:none;"&gt;
-
-            &lt;/div&gt;
-
-
-        &lt;/div&gt;
-
-        &lt;div id="Options" class="tabcontent"&gt;
-            &lt;h1&gt;Options&lt;/h1&gt;
-            &lt;form id="difficulty"&gt;
-                &lt;input type="checkbox" id="onlineCheckbox" name="mode" value="online" checked&gt;Online&lt;br&gt;
-                &lt;br&gt;
-                &lt;div id="difficultyRadioDiv"&gt;
-                    Select difficulty:&lt;br&gt;
-                    &lt;input type="radio" name="difficulty" class="radio" value="beg" checked&gt; Beginner (2 by 3)&lt;br&gt;
-                    &lt;input type="radio" name="difficulty" class="radio" value="inter"&gt; Intermediate (4 by 5)&lt;br&gt;
-                    &lt;input type="radio" name="difficulty" class="radio" value="adv"&gt; Advanced (6 by 8)&lt;br&gt;
-                    &lt;input type="radio" name="difficulty" class="radio" value="exp"&gt; Expert (9 by 11)&lt;br&gt;
-                &lt;/div&gt; 
-            &lt;/form&gt;
-        &lt;/div&gt;
-
-        &lt;div id="Leaderboards" class="tabcontent"&gt;
-            &lt;h1&gt;Leaderboards&lt;/h1&gt;
-            &lt;form id="rankingDifficulty"&gt;
-                &lt;input type="checkbox" id="rankingOnlineCheckbox" name="mode" value="online" checked&gt;Online&lt;br&gt;
-                &lt;br&gt;
-                &lt;div id="rankingRadioDiv"&gt;
-                    Select difficulty:&lt;br&gt;
-                    &lt;input type="radio" name="rankingDifficulty" class="radio" value="beg" checked&gt; Beginner (2 by 3)&lt;br&gt;
-                    &lt;input type="radio" name="rankingDifficulty" class="radio" value="inter"&gt; Intermediate (4 by 5)&lt;br&gt;
-                    &lt;input type="radio" name="rankingDifficulty" class="radio" value="adv"&gt; Advanced (6 by 8)&lt;br&gt;
-                    &lt;input type="radio" name="rankingDifficulty" class="radio" value="exp"&gt; Expert (9 by 11)&lt;br&gt;
-                &lt;/div&gt; 
-            &lt;/form&gt;
-            &lt;br&gt;
-            &lt;input type="button" class="button" id="tablebutton" value="Get Leaderboards" onclick="rankingTable();"&gt;
-            &lt;br&gt;
-            &lt;div id="leaderboard_table"&gt;
-
-            &lt;/div&gt;
-        &lt;/div&gt;
+                </div>
+            </div>
 
 
-    &lt;/div&gt;
-&lt;/body&gt;
-</code></pre>
-
-<p></p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/azthec/TW1516">Tw1516</a> is maintained by <a href="https://github.com/azthec">azthec</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
-  </body>
+        </div>
+    </body>
 </html>
